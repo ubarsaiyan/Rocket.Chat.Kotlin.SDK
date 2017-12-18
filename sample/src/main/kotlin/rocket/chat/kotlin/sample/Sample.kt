@@ -1,15 +1,10 @@
 package rocket.chat.kotlin.sample
 
-import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.BaseRoom
-import chat.rocket.common.model.ServerInfo
 import chat.rocket.common.model.Token
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
-import chat.rocket.core.compat.Callback
-import chat.rocket.core.compat.serverInfo
-import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.internal.rest.getRoomFavoriteMessages
 import chat.rocket.core.internal.rest.login
 import chat.rocket.core.internal.rest.sendMessage
@@ -23,6 +18,7 @@ import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.UUID
 
 fun main(args: Array<String>) {
     val logger = object : PlatformLogger {
@@ -57,22 +53,22 @@ fun main(args: Array<String>) {
         val token = client.login("testuser", "testpass")
         logger.debug("Login: ${token.userId} - ${token.authToken}")
 
-        client.sendMessage(roomId = "GENERAL",
-                text = "Sending message from SDK to #general and @here with url https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK/",
-                alias = "TestingAlias",
-                emoji = ":smirk:",
-                avatar = "https://avatars2.githubusercontent.com/u/224255?s=88&v=4")
+        val message = client.sendMessage(id = UUID.randomUUID().toString(),
+                roomId = "GENERAL",
+                message = "Sending message from SDK to #general and @here with url https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK/")
 
-        pinMessage(client)
+        logger.debug("Sent: $message")
+
+        /*pinMessage(client)
 
         getMeInfoByRx(client)
 
         val rooms = client.chatRooms()
-        logger.debug("ChatRooms: $rooms")
+        logger.debug("ChatRooms: $rooms")*/
     }
 
     // simple old callbacks
-    client.serverInfo(object : Callback<ServerInfo> {
+    /*client.serverInfo(object : Callback<ServerInfo> {
         override fun onSuccess(data: ServerInfo) {
             logger.debug("Server: $data")
         }
@@ -80,7 +76,7 @@ fun main(args: Array<String>) {
         override fun onError(error: RocketChatException) {
             error.printStackTrace()
         }
-    })
+    })*/
 
     runBlocking {
         job.join()

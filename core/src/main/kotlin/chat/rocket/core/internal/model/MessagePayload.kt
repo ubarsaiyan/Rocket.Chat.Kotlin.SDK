@@ -1,14 +1,18 @@
 package chat.rocket.core.internal.model
 
-import chat.rocket.core.model.Attachment
+import com.squareup.moshi.Json
 import se.ansman.kotshi.JsonSerializable
 
 @JsonSerializable
-data class MessagePayload(
-        val roomId: String,
-        val text: String?,
-        val alias: String?,
-        val emoji: String?,
-        val avatar: String?,
-        val attachments: List<Attachment>?
-)
+data class MessagePayload(val message: MessageInternal) {
+    @JsonSerializable
+    data class MessageInternal(
+            @Json(name = "_id") val id: String,
+            @Json(name = "rid") val roomId: String,
+            @Json(name = "msg") val message: String?
+            )
+
+    companion object {
+        fun create(id: String, roomId: String, message: String) = MessagePayload(MessageInternal(id, roomId, message))
+    }
+}
