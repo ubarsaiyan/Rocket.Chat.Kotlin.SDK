@@ -4,7 +4,6 @@ import chat.rocket.common.model.BaseRoom
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.RestResult
 import chat.rocket.core.internal.model.MessagePayload
-import chat.rocket.core.model.Attachment
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.PagedResult
 import com.squareup.moshi.Types
