@@ -12,9 +12,9 @@ import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.startCoroutine
 
 @JvmOverloads
-public fun <T> callback(context: CoroutineContext = DefaultDispatcher,
-                        callback: Callback<T>,
-                        block: suspend CoroutineScope.() -> T
+fun <T> callback(context: CoroutineContext = DefaultDispatcher,
+                 callback: Callback<T>,
+                 block: suspend CoroutineScope.() -> T
 ): Call {
     val newContext = newCoroutineContext(context)
     val job = Job(newContext[Job])

@@ -8,6 +8,7 @@ import io.fabric8.mockwebserver.DefaultMockServer
 import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -52,24 +53,23 @@ class MessagesTest {
     fun `sendMessage() should return a complete Message object`() {
         mockServer.expect()
                 .post()
-                .withPath("/api/v1/chat.postMessage")
+                .withPath("/api/v1/chat.sendMessage")
                 .andReturn(200, SEND_MESSAGE_OK)
                 .once()
 
         runBlocking {
-            val msg= sut.sendMessage(roomId = "GENERAL",
-                    text = "Sending message from SDK to #general and @here",
-                    alias = "TestingAlias",
-                    emoji = ":smirk:",
-                    avatar = "https://avatars2.githubusercontent.com/u/224255?s=88&v=4")
+            val msg= sut.sendMessage(
+                    id = "messageId",
+                    roomId = "GENERAL",
+                    message = "Sending message from SDK to #general and @here")
 
             with(msg) {
-                assertThat(senderAlias, isEqualTo("TestingAlias"))
+                assertThat(senderAlias, isEqualTo(nullValue()))
                 assertThat(message, isEqualTo("Sending message from SDK to #general and @here with url https://github.com/RocketChat/Rocket.Chat.Kotlin.SDK/"))
-                assertThat(parseUrls, isEqualTo(true))
+                assertThat(parseUrls, isEqualTo(false))
                 assertThat(groupable, isEqualTo(false))
-                assertThat(avatar, isEqualTo("https://avatars2.githubusercontent.com/u/224255?s=88&v=4"))
-                assertThat(timestamp, isEqualTo(1511443964798))
+                assertThat(avatar, isEqualTo(nullValue()))
+                assertThat(timestamp, isEqualTo(1513027870537L))
 
                 with(sender!!) {
                     assertThat(id, isEqualTo("userId"))
@@ -95,7 +95,7 @@ class MessagesTest {
                     assertThat(name, isEqualTo("general"))
                 }
 
-                assertThat(updatedAt, isEqualTo(1511443964808))
+                assertThat(updatedAt, isEqualTo(1513632670538L))
                 assertThat(id, isEqualTo("messageId"))
             }
         }

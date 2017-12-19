@@ -35,3 +35,9 @@ dokka {
     outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc"
 }
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

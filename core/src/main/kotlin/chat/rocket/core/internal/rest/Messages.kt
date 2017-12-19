@@ -4,7 +4,6 @@ import chat.rocket.common.model.BaseRoom
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.RestResult
 import chat.rocket.core.internal.model.MessagePayload
-import chat.rocket.core.model.Attachment
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.PagedResult
 import com.squareup.moshi.Types
@@ -67,28 +66,22 @@ suspend fun RocketChatClient.getRoomPinnedMessages(roomId: String,
 /**
  * Sends a new message
  *
+ * @param id the new message ID
  * @param roomId the room where to send the message (works with all types)
- * @param text Optional text message to send
- * @param alias Optianal alias to be used as the sender of the message
- * @param emoji Optional emoji to be used as the sender's avatar
- * @param avatar Optional avatar url to be used as the sender's avatar
- * @param attachments Optional List of [Attachment]
- * @return
+ * @param message Optional text message to send
+ * @return the new Message object
  */
-suspend fun RocketChatClient.sendMessage(roomId: String,
-                                         text: String? = null,
-                                         alias: String? = null,
-                                         emoji: String? = null,
-                                         avatar: String? = null,
-                                         attachments: List<Attachment>? = null): Message {
-    val payload = MessagePayload(roomId, text, alias, emoji, avatar, attachments)
+suspend fun RocketChatClient.sendMessage(id: String,
+                                         roomId: String,
+                                         message: String): Message {
+    val payload = MessagePayload.create(id, roomId, message)
     val adapter = moshi.adapter(MessagePayload::class.java)
     val payloadBody = adapter.toJson(payload)
 
     val contentType = MediaType.parse("application/json; charset=utf-8")
     val body = RequestBody.create(contentType, payloadBody)
 
-    val url = requestUrl(restUrl, "chat.postMessage").build()
+    val url = requestUrl(restUrl, "chat.sendMessage").build()
     val request = requestBuilder(url).post(body).build()
 
     val type = Types.newParameterizedType(RestResult::class.java, Message::class.java)
