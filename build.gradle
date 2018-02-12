@@ -1,5 +1,4 @@
 buildscript {
-    apply from: rootProject.file('dependencies.gradle')
 
     repositories {
         jcenter()
@@ -9,14 +8,13 @@ buildscript {
         }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.5.0"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${versions.dokka}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
+        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:${Versions.KOTLINTER}"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${Versions.DOKKA}"
     }
 }
 
 allprojects {
-    apply from: rootProject.file('dependencies.gradle')
     repositories {
         jcenter()
         mavenCentral()
