@@ -8,9 +8,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
-        classpath "gradle.plugin.org.jmailen.gradle:kotlinter-gradle:${Versions.KOTLINTER}"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${Versions.DOKKA}"
+        Global.classpath.each { dep ->
+            add(dep.configuration, dep.dependency)
+        }
     }
 }
 
@@ -23,4 +23,9 @@ allprojects {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
+
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    apply plugin: 'kotlin-kapt'
+    apply plugin: 'com.github.ben-manes.versions'
 }

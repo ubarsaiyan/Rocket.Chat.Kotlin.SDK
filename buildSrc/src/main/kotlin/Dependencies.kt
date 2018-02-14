@@ -3,19 +3,20 @@ object Versions {
     //PLUGINS
     const val KOTLINTER = "1.5.0"
     const val DOKKA = "0.9.15"
+    const val GRADLE_VERSIONS_PLUGIN = "0.17.0"
 
     //LIBS
-    const val COROUTINE = "0.22"
-    const val KOTSHI = "0.3.0"
-    const val OKHTTP = "3.9.0"
+    const val COROUTINE = "0.22.2"
+    const val KOTSHI = "1.0.0"
+    const val OKHTTP = "3.9.1"
     const val MOSHI = "1.6.0-SNAPSHOT"
     const val JSR = "3.0.2"
-    const val JSON = "20090211"
+    const val JSON = "20180130"
 
     //TEST
     const val JUNIT = "4.12"
-    const val MOCKITO = "2.12.0"
-    const val ASSERTJ = "3.8.0"
+    const val MOCKITO = "2.15.0"
+    const val ASSERTJ = "3.9.0"
     const val MOCKITO_KOTLIN = "1.5.0"
     const val MOCKWEBSERVER = "852ce0b657"
 }
@@ -60,12 +61,14 @@ internal object TestLibs {
     val mockWebServer = TestCompile(TestDependencies.MOCKWEBSERVER)
 }
 
+private const val CLASSPATH = "classpath"
 private const val COMPILE = "compile"
 private const val COMPILE_ONLY = "compileOnly"
 private const val KAPT = "kapt"
 private const val TEST_COMPILE = "testCompile"
 
 sealed class Dependency(val configuration: String, val dependency: String)
+class Classpath(dependency: String) : Dependency(CLASSPATH, dependency)
 class Compile(dependency: String) : Dependency(COMPILE, dependency)
 class Kapt(dependency: String) : Dependency(KAPT, dependency)
 class CompileOnly(dependency: String) : Dependency(COMPILE_ONLY, dependency)
