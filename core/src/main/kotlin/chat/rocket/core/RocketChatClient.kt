@@ -37,8 +37,8 @@ class RocketChatClient private constructor(internal val httpClient: OkHttpClient
             .add(AttachmentAdapterFactory(logger))
             .add(RoomListAdapterFactory(logger))
             .add(MetaJsonAdapter.ADAPTER_FACTORY)
-            .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
-            .add(Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
+            .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()).nullSafe())
+            .add(Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()).nullSafe())
             // XXX - MAKE SURE TO KEEP CommonJsonAdapterFactory and CoreJsonAdapterFactory as the latest Adapters...
             .add(CommonJsonAdapterFactory.INSTANCE)
             .add(CoreJsonAdapterFactory.INSTANCE)

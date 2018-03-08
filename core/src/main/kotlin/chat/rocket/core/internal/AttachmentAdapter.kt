@@ -62,7 +62,7 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
         var text: String? = null                  // 4
         var thumbUrl: String? = null              // 5
         var color: String? = null                 // 6
-        lateinit var titleLink: String            // 7
+        var titleLink: String? = null             // 7
         var titleLinkDownload: Boolean = false    // 8
         var imageUrl: String? = null              // 9
         var imageType: String? = null             // 10
@@ -83,14 +83,14 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
         reader.beginObject()
         while (reader.hasNext()) {
             when (reader.selectName(OPTIONS)) {
-                0 -> title = reader.nextString()
+                0 -> title = reader.nextStringOrNull()
                 1 -> type = reader.nextString()
                 2 -> description = reader.nextStringOrNull()
                 3 -> author = reader.nextStringOrNull()
                 4 -> text = reader.nextStringOrNull()
                 5 -> thumbUrl = reader.nextStringOrNull()
                 6 -> color = reader.nextStringOrNull()
-                7 -> titleLink = reader.nextString()
+                7 -> titleLink = reader.nextStringOrNull()
                 8 -> titleLinkDownload = reader.nextBooleanOrFalse()
                 9 -> imageUrl = reader.nextStringOrNull()
                 10 -> imageType = reader.nextStringOrNull()
