@@ -19,6 +19,7 @@ data class Room(
     @Json(name = "_updatedAt") @ISO8601Date override val updatedAt: Long?,
     val topic: String?,
     val description: String?,
-    val announcement: String?,
+    //FIXME - temporary remove announcement as a hot fix...
+    //val announcement: String?,
     val lastMessage: Message?
 ) : BaseRoom

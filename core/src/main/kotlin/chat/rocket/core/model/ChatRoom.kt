@@ -25,14 +25,15 @@ data class ChatRoom(
     val lastSeen: Long?,
     val topic: String?,
     val description: String?,
-    val announcement: String?,
+    //FIXME - temporary remove this field
+    //val announcement: String?,
     @get:JvmName("isDefault")
     val default: Boolean = false,
     val favorite: Boolean = false,
     val open: Boolean,
     val alert: Boolean,
     val unread: Long,
-    val userMenstions: Long?,
+    val userMentions: Long?,
     val groupMentions: Long?,
     val lastMessage: Message?,
     val client: RocketChatClient
@@ -51,13 +52,14 @@ data class ChatRoom(
                             lastSeen = subscription.lastSeen,
                             topic = room.topic,
                             description = room.description,
-                            announcement = room.announcement,
+                            //FIXME - removed temporary
+                            //announcement = room.announcement,
                             default = subscription.isDefault,
                             favorite = subscription.isFavorite,
                             open = subscription.open,
                             alert = subscription.alert,
                             unread = subscription.unread,
-                            userMenstions = subscription.userMentions,
+                            userMentions = subscription.userMentions,
                             groupMentions = subscription.groupMentions,
                             lastMessage = room.lastMessage,
                             client = client)
