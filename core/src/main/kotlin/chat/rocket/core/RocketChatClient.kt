@@ -21,7 +21,6 @@ import chat.rocket.core.internal.realtime.socket.Socket
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.model.Message
-import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import chat.rocket.core.model.url.MetaJsonAdapter
 import com.squareup.moshi.Moshi
@@ -58,7 +57,7 @@ class RocketChatClient private constructor(
     val roomsChannel = Channel<StreamMessage<Room>>()
     val subscriptionsChannel = Channel<StreamMessage<Subscription>>()
     val messagesChannel = Channel<Message>()
-    val userDataChannel = Channel<Myself>()
+    val userDataChannel = Channel<User>()
     val activeUsersChannel = Channel<User>()
     val typingStatusChannel = Channel<Pair<String, Boolean>>()
     internal val socket: Socket

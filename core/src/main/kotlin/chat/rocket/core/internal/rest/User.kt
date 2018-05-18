@@ -14,7 +14,6 @@ import chat.rocket.core.internal.model.UserPayloadData
 import chat.rocket.core.internal.model.OwnBasicInformationPayload
 import chat.rocket.core.internal.model.OwnBasicInformationPayloadData
 import chat.rocket.core.model.ChatRoom
-import chat.rocket.core.model.Myself
 import chat.rocket.core.model.UserRole
 import chat.rocket.core.model.Room
 import com.squareup.moshi.Types
@@ -30,14 +29,14 @@ import java.io.File
  * Returns the current logged user information, useful to check if the Token from TokenProvider
  * is still valid.
  *
- * @see Myself
+ * @see User
  * @see RocketChatException
  */
-suspend fun RocketChatClient.me(): Myself {
+suspend fun RocketChatClient.me(): User {
     val httpUrl = requestUrl(restUrl, "me").build()
     val request = requestBuilder(httpUrl).get().build()
 
-    return handleRestCall(request, Myself::class.java)
+    return handleRestCall(request, User::class.java)
 }
 
 /**

@@ -12,7 +12,6 @@ import chat.rocket.core.internal.realtime.message.pongMessage
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.model.Message
-import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
 import com.squareup.moshi.JsonAdapter
 import kotlinx.coroutines.experimental.Job
@@ -36,7 +35,7 @@ class Socket(
     internal val roomsChannel: SendChannel<StreamMessage<Room>>,
     internal val subscriptionsChannel: SendChannel<StreamMessage<Subscription>>,
     internal val messagesChannel: SendChannel<Message>,
-    internal val userDataChannel: SendChannel<Myself>,
+    internal val userDataChannel: SendChannel<User>,
     internal val activeUsersChannel: SendChannel<User>,
     internal val typingStatusChannel: SendChannel<Pair<String, Boolean>>
 ) : WebSocketListener() {

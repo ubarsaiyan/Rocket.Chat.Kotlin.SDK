@@ -4,19 +4,26 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.ServerInfo
 import chat.rocket.common.model.Token
+import chat.rocket.common.model.User
 import chat.rocket.common.model.UserStatus
 import chat.rocket.common.util.PlatformLogger
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.TokenRepository
 import chat.rocket.core.compat.Callback
 import chat.rocket.core.compat.serverInfo
-import chat.rocket.core.internal.realtime.*
-import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.setDefaultStatus
+import chat.rocket.core.internal.realtime.setTemporaryStatus
+import chat.rocket.core.internal.realtime.setTypingStatus
 import chat.rocket.core.internal.realtime.socket.connect
+import chat.rocket.core.internal.realtime.socket.model.State
+import chat.rocket.core.internal.realtime.subscribeActiveUsers
+import chat.rocket.core.internal.realtime.subscribeRooms
+import chat.rocket.core.internal.realtime.subscribeSubscriptions
+import chat.rocket.core.internal.realtime.subscribeTypingStatus
+import chat.rocket.core.internal.realtime.subscribeUserData
 import chat.rocket.core.internal.rest.chatRooms
 import chat.rocket.core.internal.rest.getFavoriteMessages
 import chat.rocket.core.internal.rest.login
-import chat.rocket.core.model.Myself
 import chat.rocket.core.model.history
 import chat.rocket.core.model.messages
 import chat.rocket.core.rxjava.me
@@ -176,7 +183,7 @@ fun main(args: Array<String>) {
 
 fun getMeInfoByRx(client: RocketChatClient) {
     // using RxJava2
-    val myself: Single<Myself> = client.me()
+    val myself: Single<User> = client.me()
     myself
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.newThread())
