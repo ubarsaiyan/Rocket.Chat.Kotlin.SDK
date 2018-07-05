@@ -2,17 +2,7 @@ package chat.rocket.core.internal
 
 import chat.rocket.common.internal.ISO8601Date
 import chat.rocket.common.util.Logger
-import chat.rocket.core.model.attachment.Attachment
-import chat.rocket.core.model.attachment.AudioAttachment
-import chat.rocket.core.model.attachment.AuthorAttachment
-import chat.rocket.core.model.attachment.Color
-import chat.rocket.core.model.attachment.ColorAttachment
-import chat.rocket.core.model.attachment.Field
-import chat.rocket.core.model.attachment.FileAttachment
-import chat.rocket.core.model.attachment.GenericFileAttachment
-import chat.rocket.core.model.attachment.ImageAttachment
-import chat.rocket.core.model.attachment.MessageAttachment
-import chat.rocket.core.model.attachment.VideoAttachment
+import chat.rocket.core.model.attachment.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonReader
@@ -26,6 +16,7 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
     private val type = Types.newParameterizedType(List::class.java, Attachment::class.java)
     private val attachmentsAdapter = moshi.adapter<List<Attachment>>(type)
     private val tsAdapter = moshi.adapter<Long>(Long::class.java, ISO8601Date::class.java)
+    private val actionAdapter = moshi.adapter<Action>(Action::class.java)
     private val fieldAdapter = moshi.adapter<Field>(Field::class.java)
     private val colorAdapter = moshi.adapter<Color>(Color::class.java)
 
@@ -54,8 +45,9 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
             "author_icon",          // 21
             "author_link",          // 22
             "image_preview",        // 23
-            "fields",               // 24
-            "fallback"              // 25
+            "actions",              // 24
+            "fields",               // 25
+            "fallback"              // 26
     )
 
     private val OPTIONS = JsonReader.Options.of(*NAMES)
@@ -89,8 +81,9 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
         var authorIcon: String? = null            // 21
         var authorLink: String? = null            // 22
         var imagePreview: String? = null          // 23
-        var fields: List<Field>? = null           // 24
-        var fallback: String? = null              // 25
+        var actions: List<Action>? = null         // 24
+        var fields: List<Field>? = null           // 25
+        var fallback: String? = null              // 26
 
         reader.beginObject()
         while (reader.hasNext()) {
@@ -119,8 +112,9 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
                 21 -> authorIcon = reader.nextStringOrNull()
                 22 -> authorLink = reader.nextStringOrNull()
                 23 -> imagePreview = reader.nextStringOrNull()
-                24 -> fields = parseFields(reader)
-                25 -> fallback = reader.nextStringOrNull()
+                24 -> actions = parseActions(reader)
+                25 -> fields = parseFields(reader)
+                26 -> fallback = reader.nextStringOrNull()
                 else -> {
                     val name = reader.nextName()
                     logger.debug {
@@ -162,6 +156,43 @@ class AttachmentAdapter(moshi: Moshi, private val logger: Logger) : JsonAdapter<
                 logger.debug {
                     "Invalid Attachment type: supported are file and message at ${reader.path} - type: $type"
                 }
+                null
+            }
+        }
+    }
+
+    private fun parseActions(reader: JsonReader): List<Action>? {
+        return when {
+            reader.peek() == JsonReader.Token.NULL -> return reader.nextNull<List<Action>>()
+            reader.peek() == JsonReader.Token.BEGIN_ARRAY -> {
+                reader.beginArray()
+                if (reader.peek() == JsonReader.Token.NULL) {
+                    reader.skipValue()
+                    reader.endArray()
+                    return null
+                }
+                val list = ArrayList<Action>()
+                while (reader.hasNext()) {
+                    val action = actionAdapter.fromJson(reader)
+                    action?.let {
+                        list.add(it)
+                    }
+                }
+                reader.endArray()
+                list
+            }
+            reader.peek() == JsonReader.Token.BEGIN_OBJECT -> {
+                val list = ArrayList<Action>()
+                reader.beginObject()
+                val action = actionAdapter.fromJson(reader)
+                action?.let {
+                    list.add(it)
+                }
+                reader.endObject()
+                list
+            }
+            else -> {
+                reader.skipValue()
                 null
             }
         }
