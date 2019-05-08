@@ -14,11 +14,7 @@ import chat.rocket.core.internal.model.UserPayloadData
 import chat.rocket.core.internal.model.OwnBasicInformationPayload
 import chat.rocket.core.internal.model.OwnBasicInformationPayloadData
 import chat.rocket.core.internal.model.PasswordPayload
-import chat.rocket.core.model.ChatRoom
-import chat.rocket.core.model.Myself
-import chat.rocket.core.model.Removed
-import chat.rocket.core.model.UserRole
-import chat.rocket.core.model.Room
+import chat.rocket.core.model.*
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -220,6 +216,26 @@ suspend fun RocketChatClient.roles(): UserRole = withContext(Dispatchers.IO) {
     val httpUrl = requestUrl(restUrl, "user.roles").build()
     val request = requestBuilderForAuthenticatedMethods(httpUrl).get().build()
     return@withContext handleRestCall<UserRole>(request, UserRole::class.java)
+}
+
+/**
+ * Request for downloading user's data.
+ *
+ * @param userId The ID of the user whose data need to downloaded.
+ *
+ * @return DataDownloadResult specifying whether the data download request is placed successfully.
+ */
+suspend fun RocketChatClient.requestDataDownload(userId: String): DataDownloadResult = withContext(Dispatchers.IO)  {
+    val payload = UserPayload(userId, null, null)
+    val adapter = moshi.adapter(UserPayload::class.java)
+
+    val payloadBody = adapter.toJson(payload)
+    val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+
+    val httpUrl = requestUrl(restUrl, "users.requestDataDownload").build()
+    val request = requestBuilderForAuthenticatedMethods(httpUrl).post(body).build()
+
+    return@withContext handleRestCall<DataDownloadResult>(request, DataDownloadResult::class.java)
 }
 
 internal fun RocketChatClient.combine(
